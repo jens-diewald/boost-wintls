@@ -1,9 +1,20 @@
+find_package(OpenSSL COMPONENTS SSL Crypto)
+
+
 add_executable(https_client https_client.cpp)
+add_executable(https_client_crossplatform https_client_crossplatform.cpp)
 add_executable(async_https_client async_https_client.cpp)
 add_executable(echo_client echo_client.cpp)
 add_executable(echo_server echo_server.cpp)
 
 target_link_libraries(https_client PRIVATE
+  boost-wintls
+)
+
+target_link_libraries(https_client_crossplatform PRIVATE
+  OpenSSL::SSL
+  OpenSSL::Crypto
+  CRYPT32.LIB
   boost-wintls
 )
 
