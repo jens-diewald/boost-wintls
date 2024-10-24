@@ -49,8 +49,7 @@ struct async_read : net::coroutine {
       if (state == detail::sspi_decrypt::state::error) {
         if (!is_continuation()) {
           WINTLS_ASIO_CORO_YIELD {
-            auto e = self.get_executor();
-            net::post(e, [self = std::move(self), ec, size_read]() mutable { self(ec, size_read); });
+            net::post(self.get_io_executor(), net::append(std::move(self), ec, size_read));
           }
         }
         ec = decrypt_.last_error();

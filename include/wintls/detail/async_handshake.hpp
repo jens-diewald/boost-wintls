@@ -71,8 +71,7 @@ struct async_handshake : net::coroutine {
 
       if (!is_continuation()) {
         WINTLS_ASIO_CORO_YIELD {
-          auto e = self.get_executor();
-          net::post(e, [self = std::move(self), ec, length]() mutable { self(ec, length); });
+          net::post(self.get_io_executor(), net::append(std::move(self), ec, length));
         }
       }
       self.complete(handshake_.last_error());
